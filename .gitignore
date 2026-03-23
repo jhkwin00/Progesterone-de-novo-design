@@ -1,0 +1,5 @@
+﻿*.sif
+*.pt
+*.pdbqt
+__pycache__/
+.ipynb_checkpoints/
