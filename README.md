@@ -6,6 +6,19 @@
 
 ## Overview
 
+### Why This Project
+
+The two core tools used here — **RFdiffusionAA** (Krishna et al., *Science* 2024)
+and **LigandMPNN** (Dauparas et al., *Nature Methods* 2025) — represent the current
+state of the art in AI-based protein design for small-molecule targets.
+Rather than reading these papers passively, the goal was to build a working pipeline
+using these tools and understand where they succeed, where they fail,
+and what the gaps are between a computational result and experimental validation.
+
+The target (progesterone) was chosen because it belongs to the same steroid family
+as molecules used in the reference papers (cortisol, 17α-OHP),
+making it a deliberate and reasoned extension — not an arbitrary choice.
+
 This project demonstrates a **target-guided de novo protein design** pipeline: starting from a small molecule target (progesterone), designing a de novo protein binder from scratch using RFdiffusionAA → LigandMPNN → ColabFold.
 
 ### Connection to the EGFR Project
@@ -29,46 +42,38 @@ This project is the second part of a two-project portfolio, designed to tell a c
 Progesterone is a steroid hormone essential for the female reproductive cycle, pregnancy maintenance, and neuroprotection. Several clinical contexts require precise concentration monitoring:
 
 | Clinical Context | Role of Progesterone |
-|---|---|
-| IVF (In Vitro Fertilization) | Luteal phase support — real-time monitoring required post-ovulation [^1] |
-| Preterm birth prevention | Progesterone supplementation reduces recurrent preterm birth risk [^2] |
-| Hormone replacement therapy | Co-administered with estradiol; individual dose titration required [^3] |
-| Congenital adrenal hyperplasia | 17α-OHP accumulation contaminates progesterone measurements [^4] |
-
-[^1]: van der Linden M et al. Luteal phase support for assisted reproduction cycles. *Cochrane Database Syst Rev.* 2015. [PMID: 26148507](https://pubmed.ncbi.nlm.nih.gov/26148507/)
-[^2]: Meis PJ et al. Prevention of recurrent preterm delivery by 17α-hydroxyprogesterone caproate. *N Engl J Med.* 2003;348:2379–2385. [PMID: 12802023](https://pubmed.ncbi.nlm.nih.gov/12802023/)
-[^3]: Palacios S et al. The standardized management of peri- and postmenopausal women. *Maturitas.* 2010;65:S1–S14. [PMID: 20129416](https://pubmed.ncbi.nlm.nih.gov/20129416/)
-[^4]: Krasowski MD et al. Cross-reactivity of steroid hormone immunoassays: clinical significance and two-dimensional molecular similarity prediction. *BMC Clin Pathol.* 2014;14:33. [PMID: 25071417](https://pubmed.ncbi.nlm.nih.gov/25071417/)
+| --- | --- |
+| IVF (In Vitro Fertilization) | Luteal phase support — real-time monitoring required post-ovulation [1](#user-content-fn-1-b0e67b98237464f951266b2eab6e6269) |
+| Preterm birth prevention | Progesterone supplementation reduces recurrent preterm birth risk [2](#user-content-fn-2-b0e67b98237464f951266b2eab6e6269) |
+| Hormone replacement therapy | Co-administered with estradiol; individual dose titration required [3](#user-content-fn-3-b0e67b98237464f951266b2eab6e6269) |
+| Congenital adrenal hyperplasia | 17α-OHP accumulation contaminates progesterone measurements [4](#user-content-fn-4-b0e67b98237464f951266b2eab6e6269) |
 
 ### No Reliable Point-of-Care Biomarker Exists for Progesterone
 
 ### Current Measurement and Its Limitations
 
-Current measurement relies on immunoassay (ELISA), which faces a fundamental selectivity problem: antibodies cross-react with structurally similar steroids (cortisol, 17α-OHP, testosterone) that share the same four-ring steroid scaffold (A/B/C/D rings). This cross-reactivity with structurally similar endogenous steroids has been systematically documented across multiple commercial immunoassay platforms [^4]. The only accurate alternative, LC-MS/MS, requires large laboratory equipment and trained personnel — making bedside monitoring impossible.
+Current measurement relies on immunoassay (ELISA), which faces a fundamental selectivity problem: antibodies cross-react with structurally similar steroids (cortisol, 17α-OHP, testosterone) that share the same four-ring steroid scaffold (A/B/C/D rings). This cross-reactivity with structurally similar endogenous steroids has been systematically documented across multiple commercial immunoassay platforms [4](#user-content-fn-4-b0e67b98237464f951266b2eab6e6269). The only accurate alternative, LC-MS/MS, requires large laboratory equipment and trained personnel — making bedside monitoring impossible.
 
 ### Distinguishing Progesterone from Previously Used Ligands
 
-When selecting a target, ligands already used in the key papers underpinning this pipeline were excluded to ensure originality. The reference papers and their ligands are listed below [^6] [^7].
+When selecting a target, ligands already used in the key papers underpinning this pipeline were excluded to ensure originality. The reference papers and their ligands are listed below [5](#user-content-fn-6-b0e67b98237464f951266b2eab6e6269) [6](#user-content-fn-7-b0e67b98237464f951266b2eab6e6269).
 
 At the same time, progesterone belongs to the same steroid family as cortisol and 17α-OHP — molecules that were successfully used with this exact pipeline in the reference papers. Choosing a structurally related but distinct molecule was a deliberate strategy: the RFdiffusionAA + LigandMPNN pipeline has demonstrated it can handle the rigid, compact steroid scaffold, so applying it to progesterone is a reasonable extension with a higher prior probability of pipeline success than targeting a chemically unrelated compound.
 
 | Candidate | Used in reference papers | Verdict |
-|---|---|---|
+| --- | --- | --- |
 | **Progesterone** | No | ✅ Selected |
 | Cortisol | Dauparas et al., *Nat Methods* 2025 | Excluded |
 | 17α-OHP | Dauparas et al., *Nat Methods* 2025 | Excluded |
 | Digoxigenin | Krishna et al., *Science* 2024 | Excluded |
 | Cholesterol (CHD) | Krishna et al., *Science* 2024 | Excluded |
 
-[^6]: Krishna R et al. Generalized biomolecular modeling and design with RoseTTAFold All-Atom. *Science.* 2024;384:eadl2528. — GALigandDock energy calculations were used in this paper to evaluate the protein–small molecule interface after LigandMPNN sequence design. [DOI: 10.1126/science.adl2528](https://doi.org/10.1126/science.adl2528)
-[^7]: Dauparas J, Lee GR et al. Atomic context-conditioned protein sequence design using LigandMPNN. *Nat Methods.* 2025;22:717–723. [DOI: 10.1038/s41592-025-02626-1](https://doi.org/10.1038/s41592-025-02626-1)
-
 **Structural distinction from 17α-OHP (the closest excluded molecule):**
 
 17α-OHP is a direct progesterone metabolite and the most structurally similar of all excluded candidates. The critical difference lies at carbon-17:
 
 | Molecule | C-17 substituent | C-21 substituent |
-|---|---|---|
+| --- | --- | --- |
 | **Progesterone (target)** | C=O (ketone) | −CH₃ (methyl) |
 | 17α-OHP (excluded) | −OH (hydroxyl) | −CH₃ (methyl) |
 | Cortisol (excluded) | −OH (hydroxyl) | −OH (hydroxyl) |
@@ -101,9 +106,9 @@ PDB 1A28 (PR + progesterone crystal structure, 1.80 Å)
 [Step 6] GitHub — Documentation
 ```
 
-### Why Only One Backbone (sample_0)?
+### Why Only One Backbone (sample\_0)?
 
-Each backbone generation takes ~109 minutes on a T4 GPU (80 sec/step × 100 denoising steps), and free Colab sessions auto-terminate after 90 min–12 hrs. Combined with the fact that RFdiffusionAA's outputs did not consistently produce ideal binding geometries on the first runs, the focus shifted away from generating many backbones toward learning the complete pipeline end-to-end. `sample_0.pdb` passed all downstream quality checks (9/9 sequences reached pTM > 0.5, mean_pAE < 10), so it was used as the single representative backbone for this portfolio demonstration.
+Each backbone generation takes ~109 minutes on a T4 GPU (80 sec/step × 100 denoising steps), and free Colab sessions auto-terminate after 90 min–12 hrs. Combined with the fact that RFdiffusionAA's outputs did not consistently produce ideal binding geometries on the first runs, the focus shifted away from generating many backbones toward learning the complete pipeline end-to-end. `sample_0.pdb` passed all downstream quality checks (9/9 sequences reached pTM > 0.5, mean\_pAE < 10), so it was used as the single representative backbone for this portfolio demonstration.
 
 ---
 
@@ -111,22 +116,22 @@ Each backbone generation takes ~109 minutes on a T4 GPU (80 sec/step × 100 deno
 
 ### Structure Prediction Quality (Top Designs)
 
-| Rank | pTM | mean_pAE (Å) | mean_pLDDT | Status |
-|------|-----|--------------|------------|--------|
+| Rank | pTM | mean\_pAE (Å) | mean\_pLDDT | Status |
+| --- | --- | --- | --- | --- |
 | 01 | 0.700 | 6.17 | 95.2 | ✅ PASS |
 | 02 | 0.690 | 6.84 | 94.1 | ✅ PASS |
 | 03–09 | > 0.5 | < 10 | > 70 | ✅ PASS |
 
-All 9 filtered designs passed the quality threshold (pTM > 0.5, mean_pAE < 10).
+All 9 filtered designs passed the quality threshold (pTM > 0.5, mean\_pAE < 10).
 
 ---
 
 ### Visualization 1 — ColabFold pLDDT Confidence (rank01)
 
 > **What this shows:** The designed sequence folds into a stable, confident structure.
-> Nearly the entire structure is dark blue (pLDDT > 90). mean_pLDDT = 95.2.
+> Nearly the entire structure is dark blue (pLDDT > 90). mean\_pLDDT = 95.2.
 
-![pLDDT visualization](pymol/rank01_pLDDT.png)
+[![pLDDT visualization](https://github.com/jhkwin00/Progesterone-de-novo-design/raw/main/pymol/rank01_pLDDT.png)](https://github.com/jhkwin00/Progesterone-de-novo-design/blob/main/pymol/rank01_pLDDT.png)
 
 *AlphaFold2 color scheme: dark blue > 90, cyan 70–90, yellow 50–70, orange < 50*
 
@@ -134,10 +139,10 @@ All 9 filtered designs passed the quality threshold (pTM > 0.5, mean_pAE < 10).
 
 ### Visualization 2 — RFdiffusionAA Backbone + STR Placement
 
-> **What this shows:** The spatial relationship between the de novo backbone (sample_0.pdb) and the progesterone ligand (STR) in the reference coordinate frame.
-> Yellow = progesterone (STR). Sky blue = de novo backbone (sample_0.pdb, 124 residues).
+> **What this shows:** The spatial relationship between the de novo backbone (sample\_0.pdb) and the progesterone ligand (STR) in the reference coordinate frame.
+> Yellow = progesterone (STR). Sky blue = de novo backbone (sample\_0.pdb, 124 residues).
 
-![Backbone + STR visualization](pymol/sample0_STR.png)
+[![Backbone + STR visualization](https://github.com/jhkwin00/Progesterone-de-novo-design/raw/main/pymol/sample0_STR.png)](https://github.com/jhkwin00/Progesterone-de-novo-design/blob/main/pymol/sample0_STR.png)
 
 ---
 
@@ -145,7 +150,7 @@ All 9 filtered designs passed the quality threshold (pTM > 0.5, mean_pAE < 10).
 
 ColabFold predicts structure from sequence only — STR coordinates are not part of its input.
 Placing STR onto the ColabFold-predicted structure requires a separate docking calculation.
-In the original RFdiffusionAA pipeline, Rosetta GALigandDock [^6] is used for this purpose:
+In the original RFdiffusionAA pipeline, Rosetta GALigandDock [5](#user-content-fn-6-b0e67b98237464f951266b2eab6e6269) is used for this purpose:
 after sequence design with LigandMPNN, GALigandDock energy calculations evaluate the
 protein–small molecule interface, and these binding energies are used as a filter before
 experimental characterization. This docking and energy evaluation step is outside the scope
@@ -157,7 +162,7 @@ used here and the full lab workflow.
 ## Tools & Methods
 
 | Tool | Role |
-|------|------|
+| --- | --- |
 | PyMOL | Coordinate extraction, visualization |
 | RFdiffusionAA | De novo backbone generation — [Krishna et al., Science 2024](https://doi.org/10.1126/science.adl2528) |
 | LigandMPNN | Sequence design — [Dauparas et al., Nature Methods 2025](https://doi.org/10.1038/s41592-025-02626-1) |
@@ -200,7 +205,7 @@ All 16 errors encountered are documented below.
 ### Step 1 — PyMOL Coordinate Extraction
 
 | # | Error | Root Cause | Fix |
-|---|-------|-----------|-----|
+| --- | --- | --- | --- |
 | 1 | Both Chain A and Chain B STR saved | `resn STR` selects all chains | Changed to `resn STR and chain A` |
 
 **Key lesson:** PDB 1A28 contains two PR monomers (Chain A, B), each with a bound progesterone.
@@ -211,7 +216,7 @@ Chain must always be specified when extracting ligand coordinates.
 ### Step 2 — RFdiffusionAA Backbone Generation
 
 | # | Error | Root Cause | Fix |
-|---|-------|-----------|-----|
+| --- | --- | --- | --- |
 | 2 | `ValueError: max() arg is an empty sequence` | Input was `progesterone_STR.pdb` (ligand only) — no protein residues → `idx_prot` empty → `max()` fails | Changed input to `1A28.pdb` (full complex) |
 | 3 | Google Drive copy failed | `.sif` container (12.67 GB) exceeded 15 GB Drive quota | Created new Google account for fresh 15 GB allocation |
 | 4 | `IndentationError: unexpected indent` | Multi-line Singularity command with `\` breaks was auto-indented by Colab | Rewrote as single-line command |
@@ -237,7 +242,7 @@ a *new* backbone around STR, independent of the original protein chain.
 ### Step 3 — LigandMPNN Sequence Design
 
 | # | Error | Root Cause | Fix |
-|---|-------|-----------|-----|
+| --- | --- | --- | --- |
 | 5 | `ModuleNotFoundError: prody` | Not in default Colab environment | `pip install prody` |
 | 6 | `AttributeError: np.int` | Python 3.12 + NumPy removed deprecated `np.int` alias | `sed -i 's/np\.int\b/int/g' residue_constants.py` |
 | 7 | Output contained unrelated proteins (1BC8, 4GYT, etc.) | LigandMPNN repo ships with example files in `inputs/` and `outputs/` | Deleted non-`sample_`-prefixed files from `inputs/`; cleared `outputs/` before run |
@@ -279,7 +284,7 @@ Confirmed: first 5 submissions (poly-A tails present)
 LigandMPNN uses stochastic sampling — even with the same backbone and seed,
 sequences vary between runs. Of the 30 already-generated sequences, those with
 C-terminal poly-A runs ≥ 10 residues were discarded. No additional computation was needed.
-9 sequences passed. After filtering: pTM 0.43 → 0.700, mean_pAE 13.4 → 6.17.
+9 sequences passed. After filtering: pTM 0.43 → 0.700, mean\_pAE 13.4 → 6.17.
 
 Attempting to force full redesign (`--redesigned_residues`) produced a conflict with
 `--chains_to_design "A"` and fixed all residues instead — so the filter approach was
@@ -290,9 +295,9 @@ both simpler and more effective.
 ### Step 4 — ColabFold Structure Prediction
 
 | # | Error | Root Cause | Fix |
-|---|-------|-----------|-----|
-| 11 | All 5 initial predictions FAIL (pTM 0.43–0.46, mean_pAE 11–15) | Poly-A tail sequences submitted + FASTA ranking bug in saving code | Re-selected 9 sequences from raw LigandMPNN output using poly-A filter |
-| 12 | After fix: 9/9 PASS | Poly-A tails eliminated | pTM: 0.43 → 0.700 / mean_pAE: 13.4 → 6.17 |
+| --- | --- | --- | --- |
+| 11 | All 5 initial predictions FAIL (pTM 0.43–0.46, mean\_pAE 11–15) | Poly-A tail sequences submitted + FASTA ranking bug in saving code | Re-selected 9 sequences from raw LigandMPNN output using poly-A filter |
+| 12 | After fix: 9/9 PASS | Poly-A tails eliminated | pTM: 0.43 → 0.700 / mean\_pAE: 13.4 → 6.17 |
 
 **Template mode:** `none` — de novo sequences have no PDB homologs;
 template-based prediction would bias toward unrelated structures.
@@ -302,9 +307,9 @@ template-based prediction would bias toward unrelated structures.
 ### Step 5 — PyMOL Visualization
 
 | # | Error | Root Cause | Fix |
-|---|-------|-----------|-----|
+| --- | --- | --- | --- |
 | 13 | STR floated far outside rank01 predicted structure | ColabFold takes sequence only — STR position not encoded | Switched to two-strategy visualization |
-| 14 | `HETATM` search in `sample_0.pdb` returned nothing | RFdiffusionAA CA-only output does not write ligand atoms | Used 1A28 STR coordinates aligned to sample_0 instead |
+| 14 | `HETATM` search in `sample_0.pdb` returned nothing | RFdiffusionAA CA-only output does not write ligand atoms | Used 1A28 STR coordinates aligned to sample\_0 instead |
 | 15 | Submitted wrong ColabFold result (pTM=0.43) | Used zip from failed run (`rank01_sample0_34545`) instead of corrected run (`rank01_cbb99`) | Reloaded from correct folder |
 | 16 | PNG saved with black background | `bg_color` not set before `ray` command | Added `bg_color white` before `ray 2400, 1800` |
 
@@ -332,8 +337,8 @@ Together, these two images cover the complete pipeline as a coherent visual narr
 The intended biological goal was to design a de novo protein that **selectively binds progesterone** and could serve as a biosensor or diagnostic reagent. A full pipeline toward that goal would include:
 
 | Step | Full Lab Pipeline | This Project | Gap |
-|---|---|---|---|
-| Backbone generation | 500–5,000 backbones | 1 backbone (sample_0) | Structural diversity not explored |
+| --- | --- | --- | --- |
+| Backbone generation | 500–5,000 backbones | 1 backbone (sample\_0) | Structural diversity not explored |
 | Sequence design | Multiple rounds + Rosetta ΔΔG filter | 30 sequences, ColabFold pTM filter only | No binding energy evaluation |
 | Docking validation | Rosetta GALigandDock — binding pose + ΔΔG | Not performed | Cannot confirm STR binds designed pocket |
 | Selectivity evaluation | ΔΔG comparison vs. cortisol, 17α-OHP | Not performed | Selectivity claim is structural hypothesis only |
@@ -341,13 +346,13 @@ The intended biological goal was to design a de novo protein that **selectively 
 
 ### Skill-Level Gaps
 
-- **Rosetta/PyRosetta:** ΔΔG batch calculation via PyRosetta was not implemented due to the complexity of installation and licensing. This is the most critical missing step for filtering designs computationally.
-- **Docking:** Rosetta GALigandDock or equivalent was not run; the binding pose of STR in the designed pocket is therefore unknown.
-- **Scale:** Only a single backbone was generated due to Colab runtime constraints, limiting the diversity of explored solutions.
+* **Rosetta/PyRosetta:** ΔΔG batch calculation via PyRosetta was not implemented due to the complexity of installation and licensing. This is the most critical missing step for filtering designs computationally.
+* **Docking:** Rosetta GALigandDock or equivalent was not run; the binding pose of STR in the designed pocket is therefore unknown.
+* **Scale:** Only a single backbone was generated due to Colab runtime constraints, limiting the diversity of explored solutions.
 
 ### Biological Goal vs. Actual Outcome
 
-The ColabFold results (pTM = 0.700, mean_pAE = 6.17) confirm that the designed sequences fold into stable, well-defined structures — this is a necessary but not sufficient condition. Whether these structures actually bind progesterone, and whether they do so selectively over cortisol or 17α-OHP, remains unverified. The project demonstrates end-to-end pipeline execution and computational feasibility, not a validated binder.
+The ColabFold results (pTM = 0.700, mean\_pAE = 6.17) confirm that the designed sequences fold into stable, well-defined structures — this is a necessary but not sufficient condition. Whether these structures actually bind progesterone, and whether they do so selectively over cortisol or 17α-OHP, remains unverified. The project demonstrates end-to-end pipeline execution and computational feasibility, not a validated binder.
 
 ---
 
@@ -402,8 +407,8 @@ de novo binder design against arbitrary ligands for the first time.
 
 ### LigandMPNN vs ProteinMPNN
 
-| | ProteinMPNN | LigandMPNN |
-|---|---|---|
+|  | ProteinMPNN | LigandMPNN |
+| --- | --- | --- |
 | Input | Protein backbone only | Protein backbone + small molecule atoms |
 | Ligand pocket sequence recovery | 50.5% | 63.3% |
 | Published | Science 2022 | Nature Methods 2025 |
@@ -412,11 +417,20 @@ de novo binder design against arbitrary ligands for the first time.
 
 ## Related Work
 
-- **RFdiffusionAA:** Krishna et al., *Science* 2024 — [10.1126/science.adl2528](https://doi.org/10.1126/science.adl2528)
-- **LigandMPNN:** Dauparas et al., *Nature Methods* 2025 — [10.1038/s41592-025-02626-1](https://doi.org/10.1038/s41592-025-02626-1)
-- **Reference structure:** Williams & Sigler, *Nature* 1998 — PDB [1A28](https://www.rcsb.org/structure/1A28)
-- **EGFR Docking Analysis (prior project):** [jhkwin00/EGFR-docking-analysis](https://github.com/jhkwin00/EGFR-docking-analysis)
+* **RFdiffusionAA:** Krishna et al., *Science* 2024 — [10.1126/science.adl2528](https://doi.org/10.1126/science.adl2528)
+* **LigandMPNN:** Dauparas et al., *Nature Methods* 2025 — [10.1038/s41592-025-02626-1](https://doi.org/10.1038/s41592-025-02626-1)
+* **Reference structure:** Williams & Sigler, *Nature* 1998 — PDB [1A28](https://www.rcsb.org/structure/1A28)
+* **EGFR Docking Analysis (prior project):** [jhkwin00/EGFR-docking-analysis](https://github.com/jhkwin00/EGFR-docking-analysis)
 
 ---
 
 *Portfolio project for Protein Design lab application — Janghyun Kim, 2026*
+
+## Footnotes
+
+1. van der Linden M et al. Luteal phase support for assisted reproduction cycles. *Cochrane Database Syst Rev.* 2015. [PMID: 26148507](https://pubmed.ncbi.nlm.nih.gov/26148507/)
+2. Meis PJ et al. Prevention of recurrent preterm delivery by 17α-hydroxyprogesterone caproate. *N Engl J Med.* 2003;348:2379–2385. [PMID: 12802023](https://pubmed.ncbi.nlm.nih.gov/12802023/)
+3. Palacios S et al. The standardized management of peri- and postmenopausal women. *Maturitas.* 2010;65:S1–S14. [PMID: 20129416](https://pubmed.ncbi.nlm.nih.gov/20129416/)
+4. Krasowski MD et al. Cross-reactivity of steroid hormone immunoassays: clinical significance and two-dimensional molecular similarity prediction. *BMC Clin Pathol.* 2014;14:33. [PMID: 25071417](https://pubmed.ncbi.nlm.nih.gov/25071417/)
+5. Krishna R et al. Generalized biomolecular modeling and design with RoseTTAFold All-Atom. *Science.* 2024;384:eadl2528. — GALigandDock energy calculations were used in this paper to evaluate the protein–small molecule interface after LigandMPNN sequence design. [DOI: 10.1126/science.adl2528](https://doi.org/10.1126/science.adl2528)
+6. Dauparas J, Lee GR et al. Atomic context-conditioned protein sequence design using LigandMPNN. *Nat Methods.* 2025;22:717–723. [DOI: 10.1038/s41592-025-02626-1](https://doi.org/10.1038/s41592-025-02626-1)
