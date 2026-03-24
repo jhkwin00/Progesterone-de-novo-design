@@ -98,7 +98,7 @@ PDB 1A28 (PR + progesterone crystal structure, 1.80 Å)
 [Step 5] PyMOL — Visualization
          │  pLDDT coloring + backbone–STR placement
          ▼
-[Step 6] GitHub — Documentation  ← here
+[Step 6] GitHub — Documentation
 ```
 
 ### Why Only One Backbone (sample_0)?
