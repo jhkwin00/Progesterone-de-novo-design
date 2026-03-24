@@ -35,6 +35,11 @@ Progesterone is a steroid hormone essential for the female reproductive cycle, p
 | Hormone replacement therapy | Co-administered with estradiol; individual dose titration required [^3] |
 | Congenital adrenal hyperplasia | 17α-OHP accumulation contaminates progesterone measurements [^4] |
 
+[^1]: van der Linden M et al. Luteal phase support for assisted reproduction cycles. *Cochrane Database Syst Rev.* 2015. [PMID: 26148507](https://pubmed.ncbi.nlm.nih.gov/26148507/)
+[^2]: Meis PJ et al. Prevention of recurrent preterm delivery by 17α-hydroxyprogesterone caproate. *N Engl J Med.* 2003;348:2379–2385. [PMID: 12802023](https://pubmed.ncbi.nlm.nih.gov/12802023/)
+[^3]: Palacios S et al. The standardized management of peri- and postmenopausal women. *Maturitas.* 2010;65:S1–S14. [PMID: 20129416](https://pubmed.ncbi.nlm.nih.gov/20129416/)
+[^4]: Krasowski MD et al. Cross-reactivity of steroid hormone immunoassays: clinical significance and two-dimensional molecular similarity prediction. *BMC Clin Pathol.* 2014;14:33. [PMID: 25071417](https://pubmed.ncbi.nlm.nih.gov/25071417/)
+
 ### No Reliable Point-of-Care Biomarker Exists for Progesterone
 
 ### Current Measurement and Its Limitations
@@ -146,8 +151,6 @@ protein–small molecule interface, and these binding energies are used as a fil
 experimental characterization. This docking and energy evaluation step is outside the scope
 of this portfolio, and represents the most significant gap between the abbreviated pipeline
 used here and the full lab workflow.
-
-[^8]: Krishna R et al. Generalized biomolecular modeling and design with RoseTTAFold All-Atom. *Science.* 2024;384:eadl2528. — *"After sequence design using LigandMPNN, Rosetta GALigandDock energy calculations were used to evaluate the protein–small molecule interface."* [DOI: 10.1126/science.adl2528](https://doi.org/10.1126/science.adl2528)
 
 ---
 
@@ -345,6 +348,47 @@ The intended biological goal was to design a de novo protein that **selectively 
 ### Biological Goal vs. Actual Outcome
 
 The ColabFold results (pTM = 0.700, mean_pAE = 6.17) confirm that the designed sequences fold into stable, well-defined structures — this is a necessary but not sufficient condition. Whether these structures actually bind progesterone, and whether they do so selectively over cortisol or 17α-OHP, remains unverified. The project demonstrates end-to-end pipeline execution and computational feasibility, not a validated binder.
+
+---
+
+## Future Directions
+
+The limitations above outline a natural roadmap for developing this project further.
+The following steps are listed in order of priority, balancing feasibility and impact.
+
+### 1. Rosetta GALigandDock — Docking Validation *(highest priority)*
+
+The most immediate gap. Running GALigandDock on the ColabFold-predicted structures would
+produce an actual binding pose of STR in the designed pocket, enabling PyMOL visualization
+of the protein–ligand interface and providing the first computational evidence that the
+designed pocket can physically accommodate progesterone.
+
+### 2. PyRosetta ΔΔG Batch Filtering
+
+Implementing a Python script to calculate Rosetta ΔΔG for all 9 (or more) designed sequences
+would replicate the core filtering step used in the original pipeline. This would allow
+rank-ordering designs by predicted binding energy rather than relying on ColabFold pTM alone,
+and would directly demonstrate familiarity with the standard computational protein design workflow.
+
+### 3. Selectivity Evaluation via ΔΔG Comparison
+
+Once ΔΔG calculations are in place, computing the same metric for cortisol and 17α-OHP
+against the top-ranked designed structures would convert the current structural selectivity
+hypothesis into a quantitative argument. A meaningful ΔΔG gap between progesterone and
+its closest structural analogs would be the key result this project is ultimately aiming for.
+
+### 4. Backbone Diversification
+
+Generating 5–10 additional backbones (`sample_1` through `sample_9`) using `num_designs=1`
+iterations would increase structural diversity and provide a more robust candidate pool for
+downstream filtering. No code changes are required — only additional Colab sessions.
+
+### 5. Biosensor Concept Proposal
+
+As a longer-term direction, the designed binder could serve as the recognition element in a
+point-of-care progesterone biosensor — addressing the clinical gap described in the
+Biological Motivation section. Coupling the binder to a fluorescent reporter or an
+electrochemical transducer would be a natural extension toward a diagnostic application.
 
 ---
 
